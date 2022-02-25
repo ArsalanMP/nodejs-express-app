@@ -51,9 +51,67 @@ const updateUserById = async (userId, updateBody) => {
   return user;
 };
 
+/**
+ * Follow a model by id
+ * @param {ObjectId} userId
+ * @param {ObjectId} modelID
+ * @returns {Promise<User>}
+ */
+ const followModelById = async (userId, modelId) => {
+  const user = await getUserById(userId);
+  const model = await getUserById(modelId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  if (!model) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Model not found');
+  }
+  if (model.role === 'user' || user.role === 'model') {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Forbidden');
+  }
+
+  if(!user.following.includes(model.id)) {
+    Object.assign(user, {following: [...user.following, model.id]});
+    await user.save();
+  }
+  
+  return user;
+};
+
+
+/**
+ * Unfollow a model by id
+ * @param {ObjectId} userId
+ * @param {ObjectId} modelID
+ * @returns {Promise<User>}
+ */
+const unfollowModelById = async (userId, modelId) => {
+  const user = await getUserById(userId);
+  const model = await getUserById(modelId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  if (!model) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Model not found');
+  }
+  if (model.role === 'user' || user.role === 'model') {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Forbidden');
+  }
+
+  console.log(user.following, model.id,user.following.includes(model.id));
+  if(user.following.includes(model.id)) {
+    Object.assign(user, { following: user.following.filter((item)=>item != model.id) });
+    await user.save();
+  }
+  
+  return user;
+};
+
 module.exports = {
   createUser,
   getUserById,
   updateUserById,
   getUserByUsername,
+  followModelById,
+  unfollowModelById
 };

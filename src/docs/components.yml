@@ -16,6 +16,8 @@ components:
         role:
           type: string
           enum: [user, model]
+        following:
+          type: array
       example:
         id: 5ebac534954b54139806c112
         username: arsalanmp
@@ -23,6 +25,21 @@ components:
         lastName: mahmoodpour
         profileImage: https://example.com/image.jpg
         role: user
+        following: []
+        
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+        mediaUrl:
+          type: string
+        description:
+          type: string
+      example:
+        id: 5ebac534954b54139806c112
+        medialUrl: https://example.com/image.jpg
+        description: this is a post
 
     Token:
       type: object

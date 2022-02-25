@@ -18,7 +18,19 @@ const updateUser = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const followModel = catchAsync(async (req, res) => {
+  const user = await userService.followModelById(req.user.id, req.params.userId);
+  res.send(user);
+});
+
+const unfollowModel = catchAsync(async (req, res) => {
+  const user = await userService.unfollowModelById(req.user.id, req.params.userId);
+  res.send(user);
+});
+
 module.exports = {
   getUser,
   updateUser,
+  followModel,
+  unfollowModel
 };

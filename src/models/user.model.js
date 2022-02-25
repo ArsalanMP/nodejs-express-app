@@ -44,6 +44,12 @@ const userSchema = mongoose.Schema(
       enum: roles,
       default: 'user',
     },
+    following: {
+      type: Array,
+      items: {
+        type: String,
+      }
+    },
   },
   {
     timestamps: true,

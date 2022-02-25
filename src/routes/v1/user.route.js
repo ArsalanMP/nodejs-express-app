@@ -11,6 +11,11 @@ router
   .get(auth(), validate(userValidation.getUser), userController.getUser)
   .patch(auth(), validate(userValidation.updateUser), userController.updateUser);
 
+router
+  .route('/follow/:userId')
+  .post(auth('subscribeToModels'), validate(userValidation.followModel), userController.followModel)
+  .delete(auth('subscribeToModels'), validate(userValidation.followModel), userController.unfollowModel);
+
 module.exports = router;
 
 /**
@@ -95,4 +100,62 @@ module.exports = router;
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *
+ */
+
+/**
+ * @swagger
+ * /users/follow/{id}:
+ *   post:
+ *     summary: follow a model
+ *     description: Logged in users can follow models by id.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Model user id
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/User'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *
+ *   delete:
+ *     summary: unfollow a model
+ *     description: Logged in users can unfollow models by id.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Model user id
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/User'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
  */

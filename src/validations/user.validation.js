@@ -16,7 +16,14 @@ const updateUser = {
     .min(1),
 };
 
+const followModel = {
+  params: Joi.object().keys({
+    userId: Joi.string().custom(objectId),
+  }),
+};
+
 module.exports = {
   getUser,
   updateUser,
+  followModel,
 };
