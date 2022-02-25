@@ -26,8 +26,18 @@ const getModelInfo = {
   }),
 };
 
+const searchModels = {
+  query: Joi.object().keys({
+    keyword: Joi.string().required(),
+    sortBy: Joi.string(),
+    limit: Joi.number().integer(),
+    page: Joi.number().integer(),
+  }),
+};
+
 module.exports = {
   updateUser,
   followModel,
   getModelInfo,
+  searchModels,
 };

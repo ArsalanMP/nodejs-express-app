@@ -131,6 +131,21 @@ const getModelInfo = async (id) => {
   return User.findById(id);
 };
 
+/**
+ * Searrch for models by name
+ * @param {Object} filter - Mongo filter
+ * @param {Object} options - Query options
+ * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
+ * @param {number} [options.limit] - Maximum number of results per page (default = 10)
+ * @param {number} [options.page] - Current page (default = 1)
+ * @param {string} [options.projectionString] - Selected feilds of results (default = undefined)
+ * @returns {Promise<QueryResult>}
+ */
+const searchModels = async (filter, options) => {
+  const models = await User.paginate(filter, options);
+  return models;
+};
+
 module.exports = {
   createUser,
   getUserById,
@@ -140,4 +155,5 @@ module.exports = {
   unfollowModelById,
   modelsWithMostPosts,
   getModelInfo,
+  searchModels,
 };

@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { userService } = require('../services');
+const pick = require('../utils/pick');
 
 const getUser = catchAsync(async (req, res) => {
   const { user } = req;
@@ -42,6 +43,17 @@ const getModelInfo = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const searchModels = catchAsync(async (req, res) => {
+  const data = req.query.keyword;
+  const filter = {
+    $or: [{ firstName: new RegExp(data, 'i') }, { lastName: new RegExp(data, 'i') }, { username: new RegExp(data, 'i') }] ,
+  };
+  const projectionString = 'username';
+  const options = { ...pick(req.query, ['sortBy', 'limit', 'page']), projectionString };
+  const result = await userService.searchModels(filter, options);
+  res.send(result);
+});
+
 module.exports = {
   getUser,
   updateUser,
@@ -49,4 +61,5 @@ module.exports = {
   unfollowModel,
   modelsWithMostPosts,
   getModelInfo,
+  searchModels,
 };
