@@ -8,13 +8,17 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(auth(), validate(userValidation.getUser), userController.getUser)
+  .get(auth(), userController.getUser)
   .patch(auth(), validate(userValidation.updateUser), userController.updateUser);
 
 router
   .route('/follow/:userId')
   .post(auth('subscribeToModels'), validate(userValidation.followModel), userController.followModel)
   .delete(auth('subscribeToModels'), validate(userValidation.followModel), userController.unfollowModel);
+
+router.route('/modelsWithMostPost').get(auth(), userController.modelsWithMostPosts);
+
+router.route('/:userId').get(auth(), validate(userValidation.getModelInfo), userController.getModelInfo);
 
 module.exports = router;
 
@@ -99,6 +103,57 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
+ *
+ */
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: Get a model info
+ *     description: Logged in users can fetch single model information by id.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User (model) id
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/User'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *
+ */
+
+/**
+ * @swagger
+ * /users/modelsWithMostPost:
+ *   get:
+ *     summary: Get a list of model ids with the most post counts
+ *     description: Logged in users can fetch list of model ids with the most post counts.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "200":
+ *         description: OK
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
  *
  */
 

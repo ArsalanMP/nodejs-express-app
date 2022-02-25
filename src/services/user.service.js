@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { User } = require('../models');
+const { User, Post } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -105,6 +105,32 @@ const unfollowModelById = async (userId, modelId) => {
   return user;
 };
 
+/**
+ * Query for models with most post
+ * @returns {Promise<QueryResult>}
+ */
+const modelsWithMostPosts = async () => {
+  const data = await Post.aggregate([
+    {
+      $group: {
+        _id: '$user',
+        postCount: { $sum: 1 },
+      },
+    },
+    { $sort: { postCount: -1 } },
+  ]);
+  return data;
+};
+
+/**
+ * Get Model by id
+ * @param {ObjectId} id
+ * @returns {Promise<User>}
+ */
+const getModelInfo = async (id) => {
+  return User.findById(id);
+};
+
 module.exports = {
   createUser,
   getUserById,
@@ -112,4 +138,6 @@ module.exports = {
   getUserByUsername,
   followModelById,
   unfollowModelById,
+  modelsWithMostPosts,
+  getModelInfo,
 };

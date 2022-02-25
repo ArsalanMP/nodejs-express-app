@@ -26,9 +26,27 @@ const unfollowModel = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const modelsWithMostPosts = catchAsync(async (req, res) => {
+  const result = await userService.modelsWithMostPosts();
+  res.send(result);
+});
+
+const getModelInfo = catchAsync(async (req, res) => {
+  const user = await userService.getUserById(req.params.userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Model not found');
+  }
+  if (user.role !== 'model') {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Model not found');
+  }
+  res.send(user);
+});
+
 module.exports = {
   getUser,
   updateUser,
   followModel,
   unfollowModel,
+  modelsWithMostPosts,
+  getModelInfo,
 };
