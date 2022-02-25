@@ -16,6 +16,13 @@ const getPosts = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+const getPostsFeed = catchAsync(async (req, res) => {
+  const filter = pick(req, ['user']);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const result = await postService.queryPostsFeed(filter, options);
+  res.send(result);
+});
+
 const getPost = catchAsync(async (req, res) => {
   const post = await postService.getPostById(req.params.postId);
   if (!post) {
@@ -40,4 +47,5 @@ module.exports = {
   getPost,
   updatePost,
   deletePost,
+  getPostsFeed,
 };

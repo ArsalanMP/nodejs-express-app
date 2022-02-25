@@ -26,6 +26,26 @@ const queryPosts = async (filter, options) => {
 };
 
 /**
+ * Query for posts feed
+ * @param {Object} filter - Mongo filter
+ * @param {Object} options - Query options
+ * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
+ * @param {number} [options.limit] - Maximum number of results per page (default = 10)
+ * @param {number} [options.page] - Current page (default = 1)
+ * @returns {Promise<QueryResult>}
+ */
+const queryPostsFeed = async (filter, options) => {
+  const userFollowing = filter.user.following;
+  const posts = await Post.paginate(
+    {
+      user: { $in: userFollowing },
+    },
+    options
+  );
+  return posts;
+};
+
+/**
  * Get post by id
  * @param {ObjectId} id
  * @returns {Promise<User>}
@@ -76,4 +96,5 @@ module.exports = {
   getPostById,
   updatePostById,
   deletePostById,
+  queryPostsFeed,
 };
