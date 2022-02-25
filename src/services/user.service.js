@@ -57,7 +57,7 @@ const updateUserById = async (userId, updateBody) => {
  * @param {ObjectId} modelID
  * @returns {Promise<User>}
  */
- const followModelById = async (userId, modelId) => {
+const followModelById = async (userId, modelId) => {
   const user = await getUserById(userId);
   const model = await getUserById(modelId);
   if (!user) {
@@ -70,14 +70,13 @@ const updateUserById = async (userId, updateBody) => {
     throw new ApiError(httpStatus.FORBIDDEN, 'Forbidden');
   }
 
-  if(!user.following.includes(model.id)) {
-    Object.assign(user, {following: [...user.following, model.id]});
+  if (!user.following.includes(model.id)) {
+    Object.assign(user, { following: [...user.following, model.id] });
     await user.save();
   }
-  
+
   return user;
 };
-
 
 /**
  * Unfollow a model by id
@@ -98,12 +97,11 @@ const unfollowModelById = async (userId, modelId) => {
     throw new ApiError(httpStatus.FORBIDDEN, 'Forbidden');
   }
 
-  console.log(user.following, model.id,user.following.includes(model.id));
-  if(user.following.includes(model.id)) {
-    Object.assign(user, { following: user.following.filter((item)=>item != model.id) });
+  if (user.following.includes(model.id)) {
+    Object.assign(user, { following: user.following.filter((item) => String(item) !== String(model.id)) });
     await user.save();
   }
-  
+
   return user;
 };
 
@@ -113,5 +111,5 @@ module.exports = {
   updateUserById,
   getUserByUsername,
   followModelById,
-  unfollowModelById
+  unfollowModelById,
 };

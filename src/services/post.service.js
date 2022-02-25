@@ -1,4 +1,3 @@
-
 const httpStatus = require('http-status');
 const { Post } = require('../models');
 const ApiError = require('../utils/ApiError');
@@ -8,7 +7,7 @@ const ApiError = require('../utils/ApiError');
  * @param {Object} postBody
  * @returns {Promise<Post>}
  */
- const createPost = async (postBody) => {
+const createPost = async (postBody) => {
   return Post.create(postBody);
 };
 
@@ -21,7 +20,7 @@ const ApiError = require('../utils/ApiError');
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
- const queryPosts = async (filter, options) => {
+const queryPosts = async (filter, options) => {
   const posts = await Post.paginate(filter, options);
   return posts;
 };
@@ -46,7 +45,7 @@ const updatePostById = async (postId, updateBody) => {
   if (!post) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
   }
-  if (post.user != updateBody.user.id) {
+  if (String(post.user) !== String(updateBody.user.id)) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
   }
   Object.assign(post, updateBody);
@@ -64,7 +63,7 @@ const deletePostById = async (postId, user) => {
   if (!post) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
   }
-  if (post.user != user.id) {
+  if (String(post.user) !== String(user.id)) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
   }
   await post.remove();
@@ -76,5 +75,5 @@ module.exports = {
   queryPosts,
   getPostById,
   updatePostById,
-  deletePostById
+  deletePostById,
 };

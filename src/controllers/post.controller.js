@@ -5,7 +5,7 @@ const catchAsync = require('../utils/catchAsync');
 const { postService } = require('../services');
 
 const createPost = catchAsync(async (req, res) => {
-  const post = await postService.createPost({...req.body, user: req.user});
+  const post = await postService.createPost({ ...req.body, user: req.user });
   res.status(httpStatus.CREATED).send(post);
 });
 
@@ -25,7 +25,7 @@ const getPost = catchAsync(async (req, res) => {
 });
 
 const updatePost = catchAsync(async (req, res) => {
-  const post = await postService.updatePostById(req.params.postId, {...req.body, user: req.user});
+  const post = await postService.updatePostById(req.params.postId, { ...req.body, user: req.user });
   res.send(post);
 });
 
