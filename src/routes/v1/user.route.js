@@ -18,7 +18,9 @@ router
   .post(auth('subscribeToModels'), validate(userValidation.followModel), userController.followModel)
   .delete(auth('subscribeToModels'), validate(userValidation.followModel), userController.unfollowModel);
 
-router.route('/modelsWithMostPost').get(auth(), userController.modelsWithMostPosts);
+router
+  .route('/modelsWithMostPosts')
+  .get(auth(), validate(userValidation.modelsWithMostPosts), userController.modelsWithMostPosts);
 
 router.route('/:userId').get(auth(), validate(userValidation.getModelInfo), userController.getModelInfo);
 
@@ -149,14 +151,49 @@ module.exports = router;
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         default: 10
+ *         description: Maximum number of posts
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number
  *     responses:
  *       "200":
  *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 results:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/User'
+ *                 page:
+ *                   type: integer
+ *                   example: 1
+ *                 limit:
+ *                   type: integer
+ *                   example: 10
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 1
+ *                 totalResults:
+ *                   type: integer
+ *                   example: 1
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
- *
  */
 
 /**

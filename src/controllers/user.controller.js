@@ -28,7 +28,8 @@ const unfollowModel = catchAsync(async (req, res) => {
 });
 
 const modelsWithMostPosts = catchAsync(async (req, res) => {
-  const result = await userService.modelsWithMostPosts();
+  const options = pick(req.query, ['limit', 'page']);
+  const result = await userService.modelsWithMostPosts(options);
   res.send(result);
 });
 

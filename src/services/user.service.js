@@ -107,19 +107,41 @@ const unfollowModelById = async (userId, modelId) => {
 
 /**
  * Query for models with most post
+ * @param {Object} options - Query options
+ * @param {number} [options.limit] - Maximum number of results per page (default = 10)
+ * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-const modelsWithMostPosts = async () => {
-  const data = await Post.aggregate([
-    {
-      $group: {
-        _id: '$user',
-        postCount: { $sum: 1 },
-      },
-    },
-    { $sort: { postCount: -1 } },
-  ]);
-  return data;
+const modelsWithMostPosts = async (options) => {
+  const limit = options.limit && parseInt(options.limit, 10) > 0 ? parseInt(options.limit, 10) : 10;
+  const page = options.page && parseInt(options.page, 10) > 0 ? parseInt(options.page, 10) : 1;
+  const skip = (page - 1) * limit;
+
+  const docsPromise = Post.aggregate()
+    .group({
+      _id: '$user',
+      postCount: { $sum: 1 },
+    })
+    .sort({
+      postCount: -1,
+    })
+    .skip(skip)
+    .limit(limit)
+    .exec();
+
+  const countPromise = User.countDocuments({ role: 'model' }).exec();
+  return Promise.all([countPromise, docsPromise]).then((values) => {
+    const [totalResults, results] = values;
+    const totalPages = Math.ceil(totalResults / limit);
+    const result = {
+      results,
+      page,
+      limit,
+      totalPages,
+      totalResults,
+    };
+    return Promise.resolve(result);
+  });
 };
 
 /**

@@ -35,9 +35,17 @@ const searchModels = {
   }),
 };
 
+const modelsWithMostPosts = {
+  query: Joi.object().keys({
+    limit: Joi.number().integer(),
+    page: Joi.number().integer(),
+  }),
+};
+
 module.exports = {
   updateUser,
   followModel,
   getModelInfo,
   searchModels,
+  modelsWithMostPosts,
 };
