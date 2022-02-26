@@ -24,7 +24,6 @@
     "api",
     "mongodb",
     "mongoose",
-    "docker",
     "passport",
     "joi",
     "eslint",
