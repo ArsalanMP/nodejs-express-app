@@ -12,6 +12,7 @@ router
   .patch(auth(), validate(userValidation.updateUser), userController.updateUser);
 
 router.route('/search').get(auth(), validate(userValidation.searchModels), userController.searchModels);
+router.route('/search/v2').get(auth(), validate(userValidation.searchModelsv2), userController.searchModelsv2);
 
 router
   .route('/follow/:userId')

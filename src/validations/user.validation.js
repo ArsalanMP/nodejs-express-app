@@ -35,6 +35,12 @@ const searchModels = {
   }),
 };
 
+const searchModelsv2 = {
+  query: Joi.object().keys({
+    keyword: Joi.string().required(),
+  }),
+};
+
 const modelsWithMostPosts = {
   query: Joi.object().keys({
     limit: Joi.number().integer(),
@@ -47,5 +53,6 @@ module.exports = {
   followModel,
   getModelInfo,
   searchModels,
+  searchModelsv2,
   modelsWithMostPosts,
 };

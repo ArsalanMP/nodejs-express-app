@@ -59,6 +59,22 @@ const searchModels = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+const searchModelsv2 = catchAsync(async (req, res) => {
+  const { keyword } = req.query;
+  const allModels = await userService.getAllModels();
+  const filteredModels = allModels
+    .filter(
+      (model) =>
+        model.firstName.toLowerCase().indexOf(keyword) > -1 ||
+        model.lastName.toLowerCase().indexOf(keyword) > -1 ||
+        model.username.toLowerCase().indexOf(keyword) > -1
+    )
+    .map((item) => {
+      return { username: item.username, id: item.id };
+    });
+  res.send(filteredModels);
+});
+
 module.exports = {
   getUser,
   updateUser,
@@ -67,4 +83,5 @@ module.exports = {
   modelsWithMostPosts,
   getModelInfo,
   searchModels,
+  searchModelsv2,
 };

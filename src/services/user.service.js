@@ -154,6 +154,14 @@ const getModelInfo = async (id) => {
 };
 
 /**
+ * Get all Models
+ * @returns {Promise<QueryResult>}
+ */
+const getAllModels = async () => {
+  return User.find().where({ role: 'model' });
+};
+
+/**
  * Search for models by name
  * @param {Object} filter - Mongo filter
  * @param {Object} options - Query options
@@ -190,4 +198,5 @@ module.exports = {
   getModelInfo,
   searchModels,
   searchModelsWithoutPagination,
+  getAllModels,
 };
