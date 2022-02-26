@@ -18,9 +18,27 @@ const getPosts = catchAsync(async (req, res) => {
 
 const getPostsFeed = catchAsync(async (req, res) => {
   const filter = pick(req, ['user']);
-  const options = { ...pick(req.query, ['sortBy', 'limit', 'page']), populate: 'user' };
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await postService.queryPostsFeed(filter, options);
   res.send(result);
+});
+
+const getPostsFeedv2 = catchAsync(async (req, res) => {
+  const followingModels = req.user.following;
+
+  const allPosts = await postService.getAllPosts();
+  const filteredPosts = allPosts
+    .filter((post) => followingModels.includes(String(post.user)))
+    .sort((a, b) => {
+      if (a.createdAt < b.createdAt) {
+        return 1;
+      }
+      if (a.createdAt > b.createdAt) {
+        return -1;
+      }
+      return 0;
+    });
+  res.send(filteredPosts);
 });
 
 const getPost = catchAsync(async (req, res) => {
@@ -70,5 +88,6 @@ module.exports = {
   updatePost,
   deletePost,
   getPostsFeed,
+  getPostsFeedv2,
   searchPostsByOwner,
 };

@@ -12,6 +12,7 @@ router
   .get(auth('managePosts'), validate(postValidation.getPosts), postController.getPosts);
 
 router.route('/feed').get(auth('subscribeToModels'), validate(postValidation.getPosts), postController.getPostsFeed);
+router.route('/feed/v2').get(auth('subscribeToModels'), postController.getPostsFeedv2);
 
 router
   .route('/search')
@@ -219,6 +220,44 @@ module.exports = router;
  *           minimum: 1
  *           default: 1
  *         description: Page number
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 results:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Post'
+ *                 page:
+ *                   type: integer
+ *                   example: 1
+ *                 limit:
+ *                   type: integer
+ *                   example: 10
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 1
+ *                 totalResults:
+ *                   type: integer
+ *                   example: 1
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ */
+/**
+ * @swagger
+ * /posts/feed/v2:
+ *   get:
+ *     summary: Get user posts feed using js ( no db query )
+ *     description: Get recent posts of following models with sort options and pagination
+ *     tags: [Posts]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       "200":
  *         description: OK

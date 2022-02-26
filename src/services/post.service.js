@@ -48,10 +48,18 @@ const queryPostsFeed = async (filter, options) => {
 /**
  * Get post by id
  * @param {ObjectId} id
- * @returns {Promise<User>}
+ * @returns {Promise<Post>}
  */
 const getPostById = async (id) => {
   return Post.findById(id);
+};
+
+/**
+ * Get all posts
+ * @returns {Promise<Post>}
+ */
+const getAllPosts = async () => {
+  return Post.find();
 };
 
 /**
@@ -112,4 +120,5 @@ module.exports = {
   deletePostById,
   queryPostsFeed,
   searchPostsByOwner,
+  getAllPosts,
 };
