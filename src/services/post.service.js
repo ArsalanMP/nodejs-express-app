@@ -90,6 +90,20 @@ const deletePostById = async (postId, user) => {
   return post;
 };
 
+/**
+ * Search posts by owner
+ * @param {Object} filter - Mongo filter
+ * @param {Object} options - Query options
+ * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
+ * @param {number} [options.limit] - Maximum number of results per page (default = 10)
+ * @param {number} [options.page] - Current page (default = 1)
+ * @returns {Promise<QueryResult>}
+ */
+const searchPostsByOwner = async (filter, options) => {
+  const posts = await Post.paginate(filter, options);
+  return posts;
+};
+
 module.exports = {
   createPost,
   queryPosts,
@@ -97,4 +111,5 @@ module.exports = {
   updatePostById,
   deletePostById,
   queryPostsFeed,
+  searchPostsByOwner,
 };

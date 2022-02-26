@@ -44,9 +44,13 @@ const getModelInfo = catchAsync(async (req, res) => {
 });
 
 const searchModels = catchAsync(async (req, res) => {
-  const data = req.query.keyword;
+  const { keyword } = req.query;
   const filter = {
-    $or: [{ firstName: new RegExp(data, 'i') }, { lastName: new RegExp(data, 'i') }, { username: new RegExp(data, 'i') }] ,
+    $or: [
+      { firstName: new RegExp(keyword, 'i') },
+      { lastName: new RegExp(keyword, 'i') },
+      { username: new RegExp(keyword, 'i') },
+    ],
   };
   const projectionString = 'username';
   const options = { ...pick(req.query, ['sortBy', 'limit', 'page']), projectionString };

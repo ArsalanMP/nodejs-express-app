@@ -41,10 +41,20 @@ const deletePost = {
   }),
 };
 
+const searchPostsByOwner = {
+  query: Joi.object().keys({
+    keyword: Joi.string().required(),
+    sortBy: Joi.string(),
+    limit: Joi.number().integer(),
+    page: Joi.number().integer(),
+  }),
+};
+
 module.exports = {
   createPost,
   getPosts,
   getPost,
   updatePost,
   deletePost,
+  searchPostsByOwner,
 };

@@ -132,7 +132,7 @@ const getModelInfo = async (id) => {
 };
 
 /**
- * Searrch for models by name
+ * Search for models by name
  * @param {Object} filter - Mongo filter
  * @param {Object} options - Query options
  * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
@@ -146,6 +146,17 @@ const searchModels = async (filter, options) => {
   return models;
 };
 
+/**
+ * Search for models by name
+ * @param {Object} filter - Mongo filter
+ * @param {string} [projectionString] - Selected feilds of results (default = undefined)
+ * @returns {Promise<QueryResult>}
+ */
+const searchModelsWithoutPagination = async (filter, projectionString) => {
+  const models = await User.find(filter, projectionString);
+  return models;
+};
+
 module.exports = {
   createUser,
   getUserById,
@@ -156,4 +167,5 @@ module.exports = {
   modelsWithMostPosts,
   getModelInfo,
   searchModels,
+  searchModelsWithoutPagination,
 };
